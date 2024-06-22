@@ -68,6 +68,10 @@ public class StudentUser {
 
     public void searchStudentByClass() {
         String studentClass = DialogUtil.getInput("Enter the class to search for (format: DIT/FT/2A/01):");
+        if (studentClass == null) {
+            DialogUtil.showMessage("no class entered");
+            return;
+        }
         if (!Pattern.matches("^[A-Za-z0-9]{3}/[A-Za-z]{2}/\\d[A-Za-z]/\\d{2}$", studentClass)) {
             DialogUtil.showMessage("Invalid class format. Please use the format DIT/FT/2A/01.");
             return;
@@ -91,20 +95,52 @@ public class StudentUser {
 
     public void searchStudentByName() {
         String name = DialogUtil.getInput("Enter the name of the student to search for:");
+        if (name == null || name.trim().isEmpty()) {
+            DialogUtil.showMessage("Invalid input. Name cannot be empty.");
+            return;
+        }
         ArrayList<Student> studentsByName = sm.findStudentsByName(name);
         if (studentsByName.isEmpty()) {
             DialogUtil.showMessage("No students found with the name " + name);
             return;
         }
+        StringBuilder message = new StringBuilder();
+        if (sm.isNotUnqiue(studentsByName)) {
+            int dialogResult = DialogUtil.showConfirm("Multiple students found with the name " + name + ". Want to filter by admin number?", "Filter by Admin Number? (Y/N)");
+            if (dialogResult == JOptionPane.NO_OPTION) {
+                for (Student student : studentsByName) {
+                    message.append(formatStudentDetails(student)).append("\n-------------------------\n");
+                }
+                DialogUtil.showMessage(message.toString());
+            } else {
+                String admNo = DialogUtil.getInput("Enter the admin number to filter:");
+                if (admNo == null || admNo.trim().isEmpty()) {
+                    DialogUtil.showMessage("Invalid input. Admin number cannot be empty.");
+                    return;
+                }
 
-        StringBuilder message = new StringBuilder("Students with the name " + name + ":\n\n");
-        for (Student student : studentsByName) {
-            message.append("Name: ").append(student.getName()).append("\n")
-                    .append("Admin Number: ").append(student.getAdminNumber()).append("\n")
-                    .append("Class: ").append(student.getStudentClass()).append("\n")
-                    .append("GPA: ").append(String.format("%.2f", student.getGPA())).append("\n\n");
+                Student student = sm.findStudentByAdminNumber(admNo);
+                if (student != null) {
+                    DialogUtil.showMessage(formatStudentDetails(student));
+                } else {
+                    DialogUtil.showMessage("No student found with admin number " + admNo);
+                }
+            }
         }
-
-        DialogUtil.showMessage(message.toString());
+        else {
+            for (Student student : studentsByName) {
+                message.append(formatStudentDetails(student)).append("\n-------------------------\n");
+            }
+            DialogUtil.showMessage(message.toString());
+        }
     }
+
+    private String formatStudentDetails(Student student) {
+        return "Name: " + student.getName() + "\n" +
+                "Admin: " + student.getAdminNumber() + "\n" +
+                "Class: " + student.getStudentClass() + "\n" +
+                "Modules Taken:\n" + student.displayModules() + "\n" +
+                "GPA: " + String.format("%.2f", student.getGPA()) + "\n";
+    }
+
 }

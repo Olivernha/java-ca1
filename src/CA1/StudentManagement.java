@@ -9,17 +9,13 @@ public class StudentManagement {
 
     public StudentManagement() {
         ArrayList<Module> modules = new ArrayList<>();
-        modules.add(new Module("CS101", "Programming", 5, 80));
+        modules.add(new Module("DBScode", "DBS", 5, 80));
         addStudent(new Student("John Doe", "p2340390", "DIT/FT/2A/01", modules));
     }
 
     public ArrayList<Student> getStudents() {
         return students;
     }
-
-//    public String getAllStudData() {
-//
-//    }
 
     public void addStudent(Student student) {
         students.add(student);
@@ -33,7 +29,12 @@ public class StudentManagement {
         }
         return false;
     }
-
+    public boolean isNotUnqiue(ArrayList<Student> student_names){
+        if(student_names.size() > 1){
+            return true;
+        }
+        return false;
+    }
     public Student findStudentByAdminNumber(String adminNumber) {
         for (Student student : students) {
             if (student.getAdminNumber().equals(adminNumber)) {
@@ -51,7 +52,16 @@ public class StudentManagement {
         }
         return studentsInClass;
     }
-
+    public Module findModuleByCode(String moduleCode) {
+        for (Student student : getStudents()) {
+            for (Module module : student.getModules()) {
+                if (module.getModuleCodes().equals(moduleCode)) {
+                    return module;
+                }
+            }
+        }
+        return null;
+    }
     public ArrayList<Student> findStudentsByName(String name) {
         ArrayList<Student> studentsByName = new ArrayList<>();
         for (Student student : students) {
