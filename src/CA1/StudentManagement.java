@@ -234,7 +234,6 @@ public class StudentManagement {
             student_class = DialogUtil.getInput("Enter the class to search for (format: DIT/FT/2A/01):");
 
             if (student_class == null) {
-                // User clicked the cancel button, return null to go back to the previous page
                 return null;
             }
 

@@ -102,7 +102,12 @@ public class StudentAdmin {
 
     private Module createModule(ArrayList<Module> existingModules) {
         String moduleCode = getUniqueModuleCode(existingModules);
-        if (moduleCode == null) return null;
+
+        while (moduleCode == null || !moduleCode.matches("ST\\d{5}")) {
+            DialogUtil.showMessage("Invalid module code. Module code should be in the format ST#####.");
+            moduleCode = getUniqueModuleCode(existingModules);
+        }
+
         Module existingModule = sm.findModuleByCode(moduleCode);
 
         if (existingModule != null) {
@@ -150,6 +155,7 @@ public class StudentAdmin {
             if (!moduleCodeExists(moduleCode, modules)) {
                 return moduleCode;
             }
+
             DialogUtil.showMessage("Module code already added. Please enter a different module code.");
         }
     }
@@ -257,8 +263,7 @@ public class StudentAdmin {
         model.addRow(new Object[]{"Lowest GPA", String.format("%.2f", sm.calculateLowestGPA())});
         model.addRow(new Object[]{"No of students above GPA 3.0", sm.countStudentsAboveGPAThreshold(3.0)});
 
-       new InterfaceUtil(model,"Student Performance Statistics");
-//        JOptionPane.showMessageDialog(null, scrollPane, "Student Performance Statistics", JOptionPane.PLAIN_MESSAGE);
+        new InterfaceUtil(model,"Student Performance Statistics");
     }
 
 

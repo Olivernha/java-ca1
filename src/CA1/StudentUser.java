@@ -99,7 +99,7 @@ public class StudentUser {
                     }
                 }
                 else{
-                    DialogUtil.showMessage("Invalid admin number. Admin number should start with 'p'. (e.g. pxxxxxxx)");
+                    DialogUtil.showMessage("Invalid admin number. Admin number should start with 'p' followed 7 digits. (e.g. pxxxxxxx)");
                     return;
                 }
             }
