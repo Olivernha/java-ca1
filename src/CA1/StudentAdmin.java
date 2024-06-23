@@ -65,25 +65,6 @@ public class StudentAdmin {
             addMore = dialogResult == JOptionPane.YES_OPTION;
         }
     }
-
-    public void displayMostDifficultModule() {
-        Module module = sm.findMostDifficultModule();
-        if (module != null) {
-            DialogUtil.showMessage("Most Difficult Module:\n\n" + module);
-        } else {
-            DialogUtil.showMessage("No modules found.");
-        }
-    }
-
-    public void displayEasiestModule() {
-        Module module = sm.findEasiestModule();
-        if (module != null) {
-            DialogUtil.showMessage("Easiest Module:\n\n" + module);
-        } else {
-            DialogUtil.showMessage("No modules found.");
-        }
-    }
-
     public void forecastGPA() {
         String adminNumber = getValidStringInput("Enter the admin number of the student:");
         if (adminNumber == null) return;
@@ -218,10 +199,8 @@ public class StudentAdmin {
     private String getValidStudentClass() {
         while (true) {
             String studentClass = DialogUtil.getInput("Enter the class (format: DIT/FT/2A/01):");
-            if (studentClass == null) {
-                return null;
-            }
-            if (Pattern.matches("^[A-Za-z0-9]{3}/[A-Za-z]{2}/\\d[A-Za-z]/\\d{2}$", studentClass)) {
+
+            if (studentClass != null && Pattern.matches("^[A-Za-z0-9]{2,4}/[A-Za-z]{2}/\\d[A-Za-z]/\\d{2}$", studentClass)) {
                 return studentClass;
             }
             DialogUtil.showMessage("Invalid class format. Please use the format DIT/FT/2A/01.");

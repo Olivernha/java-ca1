@@ -12,15 +12,6 @@ public class Module {
         this.creditUnit = creditUnit;
         this.mark = mark;
     }
-
-//    public String getGrades() {
-//        if (mark >= 80) return "A";
-//        if (mark >= 70) return "B";
-//        if (mark >= 60) return "C";
-//        if (mark >= 50) return "D";
-//        return "F";
-//    }
-
     public String getModuleCodes() {
         return modCode;
     }

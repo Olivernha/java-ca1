@@ -1,18 +1,25 @@
 package CA1;
 
-import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
+import javax.sound.sampled.*;
 
 public class App {
     static StudentManagement sm = new StudentManagement();
     static StudentAdmin admin = new StudentAdmin(sm);
     static StudentUser studentUser = new StudentUser(sm);
 
-    public static void main(String[] args) {
-        showMainMenu();
+    public static void main(String[] args) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
+        File file = new File("java-ca1/programIntro.wav");
+        AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
+        Clip program_intro = AudioSystem.getClip();
+        program_intro.open(audioStream);
+        showMainMenu(program_intro);
     }
 
-    public static void showMainMenu() {
+    public static void showMainMenu(Clip program_intro) {
         while (true) {
+            program_intro.start();
             String[] options = {"1. Admin System", "2. Enquiry System", "3. Exit"};
             String choice = DialogUtil.getChoice("Choose an option:", options, "Main Menu");
 
@@ -20,22 +27,24 @@ public class App {
 
             switch (choice) {
                 case "1. Admin System":
-                    showAdminMenu();
+                    showAdminMenu(program_intro);
                     break;
                 case "2. Enquiry System":
-                    showStudentMenu();
+                    showStudentMenu(program_intro);
                     break;
                 case "3. Exit":
                     DialogUtil.showMessage("Thank you for using the Student Management System!");
+                    program_intro.stop();
                     System.exit(0);
             }
         }
     }
 
-    private static void showAdminMenu() {
+    private static void showAdminMenu(Clip program_intro) {
         while (true) {
             String[] options = {
                     "1. Create Student", "2. Delete Student", "3. Add Module for Student",
+
                     "4. Show Statistics",
                     "5. GPA Forecast", "6. Back to Main Menu", "7. Exit"
             };
@@ -55,7 +64,6 @@ public class App {
                     break;
                 case SHOW_STATISTICS:
                    admin.displayStatistics();
-                    break;
                 case GPA_FORECAST:
                     admin.forecastGPA();
                     break;
@@ -63,16 +71,18 @@ public class App {
                     return;
                 case QUIT:
                     DialogUtil.showMessage("Thank you for using the Student Management System!");
+                    program_intro.stop();
                     System.exit(0);
             }
         }
     }
 
-    private static void showStudentMenu() {
+    private static void showStudentMenu(Clip program_intro) {
         while (true) {
             String[] options = {
                     "1. Display All Students", "2. Search student by class",
-                    "3. Search student by name", "4. Back to Main Menu", "5. Quit"
+                    "3. Search student by name", "4. Display Most Difficult Module", "5. Display Easiest Module",
+                    "6. Back to Main Menu", "7. Quit"
             };
             String choice = DialogUtil.getChoice("Choose an option:", options, "Student Menu");
 
@@ -88,13 +98,29 @@ public class App {
                 case SEARCH_BY_NAME:
                     studentUser.searchStudentByName();
                     break;
+                case DISPLAY_MOST_DIFFICULT:
+                    studentUser.displayMostDifficultModule();
+                    break;
+                case DISPLAY_EASIEST:
+                    studentUser.displayEasiestModule();
+                    break;
                 case BACK_TO_MAIN:
                     return;
                 case QUIT:
                     DialogUtil.showMessage("Thank you for using the Student Management System!");
+                    program_intro.stop();
                     System.exit(0);
             }
         }
     }
+}
 
+
+// Enums for Admin and Student menu options
+enum AdminMenuOption {
+    CREATE_STUDENT, DELETE_STUDENT, ADD_MODULE, SHOW_STATISTICS, GPA_FORECAST, BACK_TO_MAIN, QUIT
+}
+
+enum StudentMenuOption {
+    DISPLAY_ALL, SEARCH_BY_CLASS, SEARCH_BY_NAME, DISPLAY_MOST_DIFFICULT, DISPLAY_EASIEST, BACK_TO_MAIN, QUIT
 }
