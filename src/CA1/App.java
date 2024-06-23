@@ -23,7 +23,7 @@ public class App {
             String[] options = {"1. Admin System", "2. Enquiry System", "3. Exit"};
             String choice = DialogUtil.getChoice("Choose an option:", options, "Main Menu");
 
-            if (choice == null) continue;
+            if (choice == null) return;
 
             switch (choice) {
                 case "1. Admin System":
@@ -44,11 +44,13 @@ public class App {
         while (true) {
             String[] options = {
                     "1. Create Student", "2. Delete Student", "3. Add Module for Student",
-                    "4. GPA Forecasting", "5. Back to Main Menu", "6. Quit"
+
+                    "4. Show Statistics",
+                    "5. GPA Forecast", "6. Back to Main Menu", "7. Exit"
             };
             String choice = DialogUtil.getChoice("Choose an option:", options, "Admin Menu");
 
-            if (choice == null) continue;
+            if (choice == null) return;
 
             switch (AdminMenuOption.values()[Integer.parseInt(choice.split("\\.")[0]) - 1]) {
                 case CREATE_STUDENT:
@@ -60,6 +62,8 @@ public class App {
                 case ADD_MODULE:
                     admin.addModulesForStudent();
                     break;
+                case SHOW_STATISTICS:
+                   admin.displayStatistics();
                 case GPA_FORECAST:
                     admin.forecastGPA();
                     break;
@@ -82,7 +86,7 @@ public class App {
             };
             String choice = DialogUtil.getChoice("Choose an option:", options, "Student Menu");
 
-            if (choice == null) continue;
+            if (choice == null) return;
 
             switch (StudentMenuOption.values()[Integer.parseInt(choice.split("\\.")[0]) - 1]) {
                 case DISPLAY_ALL:
@@ -114,7 +118,7 @@ public class App {
 
 // Enums for Admin and Student menu options
 enum AdminMenuOption {
-    CREATE_STUDENT, DELETE_STUDENT, ADD_MODULE, GPA_FORECAST, BACK_TO_MAIN, QUIT
+    CREATE_STUDENT, DELETE_STUDENT, ADD_MODULE, SHOW_STATISTICS, GPA_FORECAST, BACK_TO_MAIN, QUIT
 }
 
 enum StudentMenuOption {

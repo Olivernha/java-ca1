@@ -1,8 +1,11 @@
 package CA1;
 
 import javax.swing.*;
-import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import java.util.*;
 import java.util.regex.Pattern;
+
 
 public class StudentAdmin {
     private final StudentManagement sm;
@@ -13,13 +16,19 @@ public class StudentAdmin {
 
     public void addStudent() {
         String name = getValidStringInput("Enter the student name:");
+        if (name == null) return;
         String adminNumber = getUniqueAdminNumber();
+        if (adminNumber == null) return;
         String studentClass = getValidStudentClass();
-        int numModules = getValidIntegerInput("Enter the number of modules:", 0, Integer.MAX_VALUE);
+        if (studentClass == null) return;
+        int numModules = getValidIntegerInput("Enter the number of modules:", 0, 10);
+        if (numModules == -1) return;
 
         ArrayList<Module> modules = new ArrayList<>();
         for (int i = 0; i < numModules; i++) {
-            modules.add(createModule(modules));
+            Module module = createModule(modules);
+            if (module == null) return;
+            modules.add(module);
         }
 
         sm.addStudent(new Student(name, adminNumber, studentClass, modules));
@@ -28,6 +37,7 @@ public class StudentAdmin {
 
     public void deleteStudent() {
         String adminNumber = getValidStringInput("Enter the admin number of the student to delete:");
+        if (adminNumber == null) return;
         if (sm.deleteStudent(adminNumber)) {
             DialogUtil.showMessage("Student deleted successfully!");
         } else {
@@ -37,6 +47,7 @@ public class StudentAdmin {
 
     public void addModulesForStudent() {
         String adminNumber = getValidStringInput("Enter the admin number of the student:");
+        if (adminNumber == null) return;
         Student student = sm.findStudentByAdminNumber(adminNumber);
 
         if (student == null) {
@@ -46,7 +57,9 @@ public class StudentAdmin {
 
         boolean addMore = true;
         while (addMore) {
-            student.getModules().add(createModule(student.getModules()));
+            Module module = createModule(student.getModules());
+            if (module == null) return;
+            student.getModules().add(module);
             student.updateGPA();
             int dialogResult = JOptionPane.showConfirmDialog(null, "Would you like to add more modules?", "Warning", JOptionPane.YES_NO_OPTION);
             addMore = dialogResult == JOptionPane.YES_OPTION;
@@ -54,6 +67,7 @@ public class StudentAdmin {
     }
     public void forecastGPA() {
         String adminNumber = getValidStringInput("Enter the admin number of the student:");
+        if (adminNumber == null) return;
         Student student = sm.findStudentByAdminNumber(adminNumber);
 
         if (student == null) {
@@ -62,12 +76,17 @@ public class StudentAdmin {
         }
 
         double targetGPA = getValidDoubleInput("Enter the target GPA:", 0, 4);
-        int additionalModules = getValidIntegerInput("Enter the number of additional modules:", 0, Integer.MAX_VALUE);
-        int creditUnitsPerModule = getValidIntegerInput("Enter the credit units per module:", 0, Integer.MAX_VALUE);
+        if (targetGPA == -1) return;
+        int additionalModules = getValidIntegerInput("Enter the number of additional modules :", 0, 20);
+        if (additionalModules == -1) return;
+        int creditUnitsPerModule = getValidIntegerInput("Enter the credit units per module :", 0, 20);
+        if (creditUnitsPerModule == -1) return;
 
         int[] futureGrades = new int[additionalModules];
         for (int i = 0; i < additionalModules; i++) {
-            futureGrades[i] = getValidIntegerInput("Enter grade for module " + (i + 1) + ":", 0, 100);
+            int grade = getValidIntegerInput("Enter grade for module " + (i + 1) + ":", 0, 100);
+            if (grade == -1) return;
+            futureGrades[i] = grade;
         }
 
         boolean canAchieve = sm.canAchieveTargetGPA(student, targetGPA, additionalModules, creditUnitsPerModule, futureGrades);
@@ -77,16 +96,21 @@ public class StudentAdmin {
 
     private Module createModule(ArrayList<Module> existingModules) {
         String moduleCode = getUniqueModuleCode(existingModules);
+        if (moduleCode == null) return null;
         Module existingModule = sm.findModuleByCode(moduleCode);
 
         if (existingModule != null) {
             DialogUtil.showMessage("This module code already exists in the system. Automatically added with module name: " + existingModule.getModuleNames() + " and credit units: " + existingModule.getCreditUnits());
             int marks = getValidIntegerInput("Enter marks:", 0, 100);
+            if (marks == -1) return null;
             return new Module(moduleCode, existingModule.getModuleNames(), existingModule.getCreditUnits(), marks);
         } else {
             String moduleName = getUniqueModuleName();
+            if (moduleName == null) return null;
             int creditUnits = getValidIntegerInput("Enter credit units:", 0, Integer.MAX_VALUE);
+            if (creditUnits == -1) return null;
             int marks = getValidIntegerInput("Enter marks:", 0, 100);
+            if (marks == -1) return null;
             return new Module(moduleCode, moduleName, creditUnits, marks);
         }
     }
@@ -94,6 +118,7 @@ public class StudentAdmin {
     private String getUniqueModuleName() {
         while (true) {
             String moduleName = getValidStringInput("Enter module name:");
+            if (moduleName == null) return null;
             if (!moduleNameExists(moduleName)) {
                 return moduleName;
             }
@@ -115,6 +140,7 @@ public class StudentAdmin {
     private String getUniqueModuleCode(ArrayList<Module> modules) {
         while (true) {
             String moduleCode = getValidStringInput("Enter module code:");
+            if (moduleCode == null) return null;
             if (!moduleCodeExists(moduleCode, modules)) {
                 return moduleCode;
             }
@@ -131,12 +157,14 @@ public class StudentAdmin {
         return false;
     }
 
-
-
     private String getValidStringInput(String message) {
         while (true) {
             String input = DialogUtil.getInput(message);
-            if (input != null && !input.trim().isEmpty()) {
+            if (input == null) {
+
+                return null;
+            }
+            if (!input.trim().isEmpty()) {
                 return input;
             }
             DialogUtil.showMessage("Invalid input. Please enter a non-empty string.");
@@ -146,7 +174,11 @@ public class StudentAdmin {
     private String getValidAdminNumber() {
         while (true) {
             String adminNumber = DialogUtil.getInput("Enter the admin number (start with p):");
-            if (adminNumber != null && adminNumber.startsWith("p")) {
+            if (adminNumber == null) {
+
+                return null;
+            }
+            if (adminNumber.matches("^p\\d{7}$")) {
                 return adminNumber;
             }
             DialogUtil.showMessage("Invalid admin number. Admin number should start with 'p'.");
@@ -156,6 +188,7 @@ public class StudentAdmin {
     private String getUniqueAdminNumber() {
         while (true) {
             String adminNumber = getValidAdminNumber();
+            if (adminNumber == null) return null;
             if (sm.findStudentByAdminNumber(adminNumber) == null) {
                 return adminNumber;
             }
@@ -166,6 +199,7 @@ public class StudentAdmin {
     private String getValidStudentClass() {
         while (true) {
             String studentClass = DialogUtil.getInput("Enter the class (format: DIT/FT/2A/01):");
+
             if (studentClass != null && Pattern.matches("^[A-Za-z0-9]{2,4}/[A-Za-z]{2}/\\d[A-Za-z]/\\d{2}$", studentClass)) {
                 return studentClass;
             }
@@ -175,8 +209,12 @@ public class StudentAdmin {
 
     private int getValidIntegerInput(String message, int minValue, int maxValue) {
         while (true) {
+            String inputStr = DialogUtil.getInput(message);
+            if (inputStr == null) {
+                return -1;
+            }
             try {
-                int input = Integer.parseInt(DialogUtil.getInput(message));
+                int input = Integer.parseInt(inputStr);
                 if (input >= minValue && input <= maxValue) {
                     return input;
                 } else {
@@ -190,8 +228,12 @@ public class StudentAdmin {
 
     private double getValidDoubleInput(String message, double minValue, double maxValue) {
         while (true) {
+            String inputStr = DialogUtil.getInput(message);
+            if (inputStr == null) {
+                return -1;
+            }
             try {
-                double input = Double.parseDouble(DialogUtil.getInput(message));
+                double input = Double.parseDouble(inputStr);
                 if (input >= minValue && input <= maxValue) {
                     return input;
                 } else {
@@ -202,4 +244,31 @@ public class StudentAdmin {
             }
         }
     }
+    public void displayStatistics() {
+        String[] columnNames = {"Statistic", "Value"};
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+
+        model.addRow(new Object[]{"Median GPA", String.format("%.2f", sm.calculateMedianGPA())});
+        model.addRow(new Object[]{"Mode GPA", String.format("%.2f", sm.calculateModeGPA())});
+        model.addRow(new Object[]{"Highest GPA", String.format("%.2f", sm.calculateHighestGPA())});
+        model.addRow(new Object[]{"Lowest GPA", String.format("%.2f", sm.calculateLowestGPA())});
+        model.addRow(new Object[]{"No of students above GPA 3.0", sm.countStudentsAboveGPAThreshold(3.0)});
+
+        JTable table = new JTable(model);
+        JScrollPane scrollPane = new JScrollPane(table);
+        table.setFillsViewportHeight(true);
+
+        // Setting Row Colour
+        table.setDefaultRenderer(Object.class, new TableInterfaceUtil());
+
+        // Setting Heading colour
+        JTableHeader header = table.getTableHeader();
+        header.setDefaultRenderer(new HeaderInterfaceUtil());
+
+        JOptionPane.showMessageDialog(null, scrollPane, "Student Performance Statistics", JOptionPane.PLAIN_MESSAGE);
+    }
+
+
+
+
 }
