@@ -14,16 +14,16 @@ public class StudentManagement {
 
     public StudentManagement() {
         ArrayList<Module> modules = new ArrayList<>();
-        modules.add(new Module("DBS", "Database", 4, 71));
-        modules.add(new Module("FOP", "Fundamental Of Programming", 4, 60));
-        modules.add(new Module("OOP", "Object Oriented Programming", 4, 63));
+        modules.add(new Module("ST00001", "Database", 4, 71));
+        modules.add(new Module("ST00002", "Fundamental Of Programming", 4, 60));
+        modules.add(new Module("ST00003", "Object Oriented Programming", 4, 63));
         addStudent(new Student("oliver", "p2340391", "DIT/FT/2A/01", modules));
 
         modules = new ArrayList<>();
-        modules.add(new Module("DBS", "Database", 4, 71));
-        modules.add(new Module("FOP", "Fundamental Of Programming", 4, 50));
-        modules.add(new Module("OOP", "Object Oriented Programming", 4, 90));
-        addStudent(new Student("oliver", "p2340390", "DIT/FT/2A/01", modules));
+        modules.add(new Module("ST00001", "Database", 4, 71));
+        modules.add(new Module("ST00002", "Fundamental Of Programming", 4, 50));
+        modules.add(new Module("ST00003", "Object Oriented Programming", 4, 90));
+        addStudent(new Student("ST00004", "p2340390", "DIT/FT/2A/01", modules));
     }
 
     public ArrayList<Student> getStudents() {
