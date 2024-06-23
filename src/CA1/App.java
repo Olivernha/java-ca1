@@ -10,7 +10,7 @@ public class App {
     static StudentUser studentUser = new StudentUser(sm);
 
     public static void main(String[] args) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        File file = new File("java-ca1/programIntro.wav");
+        File file = new File("programIntro.wav");
         AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
         Clip program_intro = AudioSystem.getClip();
         program_intro.open(audioStream);

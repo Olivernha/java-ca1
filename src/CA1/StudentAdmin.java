@@ -2,7 +2,7 @@ package CA1;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
+
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -175,7 +175,6 @@ public class StudentAdmin {
         while (true) {
             String adminNumber = DialogUtil.getInput("Enter the admin number (start with p):");
             if (adminNumber == null) {
-
                 return null;
             }
             if (adminNumber.matches("^p\\d{7}$")) {
@@ -254,18 +253,8 @@ public class StudentAdmin {
         model.addRow(new Object[]{"Lowest GPA", String.format("%.2f", sm.calculateLowestGPA())});
         model.addRow(new Object[]{"No of students above GPA 3.0", sm.countStudentsAboveGPAThreshold(3.0)});
 
-        JTable table = new JTable(model);
-        JScrollPane scrollPane = new JScrollPane(table);
-        table.setFillsViewportHeight(true);
-
-        // Setting Row Colour
-        table.setDefaultRenderer(Object.class, new TableInterfaceUtil());
-
-        // Setting Heading colour
-        JTableHeader header = table.getTableHeader();
-        header.setDefaultRenderer(new HeaderInterfaceUtil());
-
-        JOptionPane.showMessageDialog(null, scrollPane, "Student Performance Statistics", JOptionPane.PLAIN_MESSAGE);
+       new InterfaceUtil(model,"Student Performance Statistics");
+//        JOptionPane.showMessageDialog(null, scrollPane, "Student Performance Statistics", JOptionPane.PLAIN_MESSAGE);
     }
 
 

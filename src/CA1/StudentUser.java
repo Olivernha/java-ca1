@@ -5,6 +5,7 @@ import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
+
 public class StudentUser {
     private final StudentManagement sm;
 
@@ -31,7 +32,7 @@ public class StudentUser {
             model.addRow(new Object[]{"", ""}); // Add an empty row for spacing
         }
 
-        new InterfaceUtil(model);
+         new InterfaceUtil(model,"All Student Data");
     }
 
     public void searchStudentByClass() {
@@ -107,7 +108,7 @@ public class StudentUser {
             }
         }
 
-        new InterfaceUtil(model);
+        new InterfaceUtil(model,"Student Details");
     }
 
     private void formatStudentDetails(Student student, DefaultTableModel model) {
@@ -142,4 +143,3 @@ public class StudentUser {
         }
     }
 }
-

@@ -8,11 +8,11 @@ import java.awt.*;
 
 public class InterfaceUtil {
 
-    public InterfaceUtil(DefaultTableModel model){
-        getjScrollPane(model);
+    public InterfaceUtil(DefaultTableModel model,String title){
+        getjScrollPane(model,title);
     }
 
-    private static void getjScrollPane(DefaultTableModel model) {
+    private static void getjScrollPane(DefaultTableModel model,String title) {
         JTable table = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(table);
         table.setFillsViewportHeight(true);
@@ -23,7 +23,7 @@ public class InterfaceUtil {
         // Setting Heading colour
         JTableHeader header = table.getTableHeader();
         header.setDefaultRenderer(new HeaderInterfaceUtil());
-        JOptionPane.showMessageDialog(null, scrollPane , "All Students Data", JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(null, scrollPane , title, JOptionPane.PLAIN_MESSAGE);
     }
 }
 class TableInterfaceUtil extends DefaultTableCellRenderer {
