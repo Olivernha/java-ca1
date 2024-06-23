@@ -17,23 +17,6 @@ public class Student {
         this.gpa = calculateGPA();
     }
 
-    public String displayModules() {
-        StringBuilder display_module = new StringBuilder();
-        for (int i = 0; i < this.modules.size(); i++) {
-            display_module.append((i + 1))
-                    .append(".")
-                    .append(this.modules.get(i).getModuleCodes())
-                    .append("/")
-                    .append(this.modules.get(i).getModuleNames())
-                    .append("/")
-                    .append(this.modules.get(i).getCreditUnits())
-                    .append(": ")
-                    .append(this.modules.get(i).getGradePoints())
-                    .append("\n");
-        }
-        return display_module.toString();
-    }
-
     public String getName() {
         return name;
     }
@@ -54,6 +37,10 @@ public class Student {
         return gpa;
     }
 
+    public void updateGPA() {
+        this.gpa = calculateGPA();
+    }
+
     public double calculateGPA() {
         int totalGradePoints = 0;
         int totalCreditUnits = 0;
@@ -68,8 +55,21 @@ public class Student {
         return (double) totalGradePoints / totalCreditUnits;
     }
 
-    public void updateGPA() {
-        this.gpa = calculateGPA();
+    public String displayModules() {
+        StringBuilder display_module = new StringBuilder();
+        for (int i = 0; i < modules.size(); i++) {
+            display_module.append((i + 1))
+                    .append(".")
+                    .append(modules.get(i).getModuleCodes())
+                    .append("/")
+                    .append(modules.get(i).getModuleNames())
+                    .append("/")
+                    .append(modules.get(i).getCreditUnits())
+                    .append(": ")
+                    .append(modules.get(i).getGrade())
+                    .append("\n");
+        }
+        return display_module.toString();
     }
 
     public String getModulesAsString() {

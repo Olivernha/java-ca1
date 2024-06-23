@@ -108,6 +108,8 @@ public class StudentAdmin {
 
             Module module = new Module(moduleCode, moduleName, creditUnit, marks);
             student.getModules().add(module);
+            student.updateGPA();
+
             DialogUtil.showMessage("Module added successfully.");
 
             int dialogResult = JOptionPane.showConfirmDialog(null, "Would you like to add more modules?", "Warning", JOptionPane.YES_NO_OPTION);

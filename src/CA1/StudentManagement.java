@@ -42,6 +42,7 @@ public class StudentManagement {
         }
         return null;
     }
+
     public ArrayList<Student> findStudentsByClass(String studentClass) {
         ArrayList<Student> studentsInClass = new ArrayList<>();
         for (Student student : students) {
@@ -54,13 +55,23 @@ public class StudentManagement {
 
     public ArrayList<Student> findStudentsByName(String name) {
         ArrayList<Student> studentsByName = new ArrayList<>();
+
         for (Student student : students) {
-            if (student.getName().equals(name)) {
+            if (name.equalsIgnoreCase(student.getName())) {
                 studentsByName.add(student);
             }
         }
         return studentsByName;
     }
+
+
+    public boolean isNotUnique(ArrayList<Student> student_names){
+        if(student_names.size() > 1){
+            return true;
+        }
+        return false;
+    }
+
     public Module findMostDifficultModule() {
         Map<String, int[]> moduleStats = new HashMap<>(); // [totalMarks, count]
         for (Student student : students) {
