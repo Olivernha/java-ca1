@@ -47,6 +47,7 @@ public class StudentAdmin {
         boolean addMore = true;
         while (addMore) {
             student.getModules().add(createModule(student.getModules()));
+            student.updateGPA();
             int dialogResult = JOptionPane.showConfirmDialog(null, "Would you like to add more modules?", "Warning", JOptionPane.YES_NO_OPTION);
             addMore = dialogResult == JOptionPane.YES_OPTION;
         }

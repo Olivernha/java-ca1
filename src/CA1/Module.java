@@ -13,13 +13,13 @@ public class Module {
         this.mark = mark;
     }
 
-    public String getGrades() {
-        if (mark >= 80) return "A";
-        if (mark >= 70) return "B";
-        if (mark >= 60) return "C";
-        if (mark >= 50) return "D";
-        return "F";
-    }
+//    public String getGrades() {
+//        if (mark >= 80) return "A";
+//        if (mark >= 70) return "B";
+//        if (mark >= 60) return "C";
+//        if (mark >= 50) return "D";
+//        return "F";
+//    }
 
     public String getModuleCodes() {
         return modCode;
@@ -41,9 +41,18 @@ public class Module {
         return 0;
     }
 
+    public char getGrade(){
+        if (mark >= 80) return 'A';
+        if (mark >= 70) return 'B';
+        if (mark >= 60) return 'C';
+        if (mark >= 50) return 'D';
+        return 'F';
+    }
+
     public int getCreditUnits() {
         return creditUnit;
     }
+
 
     @Override
     public String toString() {
