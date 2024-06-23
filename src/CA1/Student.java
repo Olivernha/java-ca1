@@ -54,29 +54,4 @@ public class Student {
 
         return (double) totalGradePoints / totalCreditUnits;
     }
-
-    public String displayModules() {
-        StringBuilder display_module = new StringBuilder();
-        for (int i = 0; i < modules.size(); i++) {
-            display_module.append((i + 1))
-                    .append(".")
-                    .append(modules.get(i).getModuleCodes())
-                    .append("/")
-                    .append(modules.get(i).getModuleNames())
-                    .append("/")
-                    .append(modules.get(i).getCreditUnits())
-                    .append(": ")
-                    .append(modules.get(i).getGrade())
-                    .append("\n");
-        }
-        return display_module.toString();
-    }
-
-//    public String getModulesAsString() {
-//        StringBuilder modulesStr = new StringBuilder();
-//        for (Module module : modules) {
-//            modulesStr.append(module.toString()).append("\n");
-//        }
-//        return modulesStr.toString();
-//    }
 }

@@ -1,13 +1,8 @@
 package CA1;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import java.awt.*;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class StudentUser {
@@ -30,24 +25,13 @@ public class StudentUser {
 
             int module_no = 1;
             for (Module module : student.getModules()) {
-                model.addRow(new Object[]{"Module "+ module_no++ , module.getModuleCodes() + "/" + module.getModuleNames() + "/" + module.getCreditUnits() + ": " + module.getGrade()});
+                model.addRow(new Object[]{STR."Module \{module_no++}", STR."\{module.getModuleCodes()}/\{module.getModuleNames()}/\{module.getCreditUnits()}: \{module.getGrade()}"});
             }
 
             model.addRow(new Object[]{"", ""}); // Add an empty row for spacing
         }
 
-        JTable table = new JTable(model);
-        JScrollPane scrollPane = new JScrollPane(table);
-        table.setFillsViewportHeight(true);
-
-        // Setting Row Colour
-        table.setDefaultRenderer(Object.class, new TableInterfaceUtil());
-
-        // Setting Heading colour
-        JTableHeader header = table.getTableHeader();
-        header.setDefaultRenderer(new HeaderInterfaceUtil());
-
-        JOptionPane.showMessageDialog(null, scrollPane, "All Students Data", JOptionPane.PLAIN_MESSAGE);
+        new InterfaceUtil(model);
     }
 
     public void searchStudentByClass() {
@@ -58,7 +42,7 @@ public class StudentUser {
             return;
         }
 
-        if (!Pattern.matches("^[A-Za-z0-9]{3,4}/[A-Za-z]{2}/\\d[A-Za-z]/\\d{2}$", studentClass)) {
+        if (!Pattern.matches("^[A-Za-z0-9]{2,4}/[A-Za-z]{2}/\\d[A-Za-z]/\\d{2}$", studentClass)) {
             DialogUtil.showMessage("Invalid class format. Please use the format DIT/FT/2A/01.");
             return;
         }
@@ -75,15 +59,9 @@ public class StudentUser {
 
         double avgGpa = totalGpa/studentsInClass.size();
 
-        StringBuilder message = new StringBuilder();
-        message.append("Number of Student(s) in ")
-                .append(studentClass)
-                .append(":")
-                .append(studentsInClass.size())
-                .append("\n")
-                .append("Average GPA : ")
-                .append(String.format("%.2f", avgGpa));
-        DialogUtil.showMessage(message.toString());
+        String message = STR."Number of Student(s) in \{studentClass}:\{studentsInClass.size()}\nAverage GPA : \{String.format("%.2f", avgGpa)}";
+
+        DialogUtil.showMessage(message);
     }
 
     public void searchStudentByName() {
@@ -94,20 +72,20 @@ public class StudentUser {
         }
         ArrayList<Student> studentsByName = sm.findStudentsByName(name);
         if (studentsByName.isEmpty()) {
-            DialogUtil.showErrorMessage("Cannot find the student" + "\"" + name + "\"!!");
+            DialogUtil.showErrorMessage(STR."Cannot find the student\"\{name}\"!!");
             return;
         }
-//        StringBuilder message = new StringBuilder();
+
         String[] columnNames = {"Attribute", "Value"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
         if (sm.isNotUnique(studentsByName)) {
-            int dialogResult = DialogUtil.showConfirm(studentsByName.size() +" students found with this name " + "\"" + name + "\"" + ". Want to filter by admin number?", "Filter by Admin Number? (Y/N)");
+            int dialogResult = DialogUtil.showConfirm(STR."\{studentsByName.size()} students found with this name \"\{name}\". Want to filter by admin number?", "Filter by Admin Number? (Y/N)");
             if (dialogResult == JOptionPane.NO_OPTION) {
                 for (Student student : studentsByName) {
                     formatStudentDetails(student,model);
                 }
-//                DialogUtil.showMessage(message.toString());
+
             } else {
                 String admNo = DialogUtil.getInput("Enter the admin number to filter:");
                 if (admNo == null || admNo.trim().isEmpty()) {
@@ -119,7 +97,7 @@ public class StudentUser {
                 if (student != null) {
                     formatStudentDetails(student,model);
                 } else {
-                    DialogUtil.showMessage("No student found with admin number " + admNo);
+                    DialogUtil.showMessage(STR."No student found with admin number \{admNo}");
                 }
             }
         }
@@ -129,18 +107,7 @@ public class StudentUser {
             }
         }
 
-        JTable table = new JTable(model);
-        JScrollPane scrollPane = new JScrollPane(table);
-        table.setFillsViewportHeight(true);
-
-        // Setting Row Colour
-        table.setDefaultRenderer(Object.class, new TableInterfaceUtil());
-
-        // Setting Heading colour
-        JTableHeader header = table.getTableHeader();
-        header.setDefaultRenderer(new HeaderInterfaceUtil());
-
-        JOptionPane.showMessageDialog(null, scrollPane, "All Students Data", JOptionPane.PLAIN_MESSAGE);
+        new InterfaceUtil(model);
     }
 
     private void formatStudentDetails(Student student, DefaultTableModel model) {
@@ -150,34 +117,29 @@ public class StudentUser {
 
         int module_no = 1;
         for (Module module : student.getModules()) {
-            model.addRow(new Object[]{"Module "+ module_no++ , module.getModuleCodes() + "/" + module.getModuleNames() + "/" + module.getCreditUnits() + ": " + module.getGrade()});
+            model.addRow(new Object[]{STR."Module \{module_no++}", STR."\{module.getModuleCodes()}/\{module.getModuleNames()}/\{module.getCreditUnits()}: \{module.getGrade()}"});
         }
         model.addRow(new Object[]{"GPA",String.format("%.2f",student.getGPA())});
 
         model.addRow(new Object[]{"", ""}); // Add an empty row for spacing
     }
-}
 
-class TableInterfaceUtil extends DefaultTableCellRenderer {
-    @Override
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        if (column == 0) {
-            component.setBackground(Color.LIGHT_GRAY);
+    public void displayMostDifficultModule() {
+        Module module = sm.findMostDifficultModule();
+        if (module != null) {
+            DialogUtil.showMessage(STR."Most Difficult Module:\n\nModule code : \{module.getModuleCodes()}\nModule Name : \{module.getModuleNames()}\nModule Credit : \{module.getCreditUnits()}");
         } else {
-            component.setBackground(Color.WHITE);
+            DialogUtil.showMessage("No modules found.");
         }
-        return component;
+    }
+
+    public void displayEasiestModule() {
+        Module module = sm.findEasiestModule();
+        if (module != null) {
+            DialogUtil.showMessage(STR."Easiest Module:\n\nModule code : \{module.getModuleCodes()}\nModule Name : \{module.getModuleNames()}\nModule Credit : \{module.getCreditUnits()}");
+        } else {
+            DialogUtil.showMessage("No modules found.");
+        }
     }
 }
 
-class HeaderInterfaceUtil extends DefaultTableCellRenderer {
-    @Override
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        c.setBackground(Color.BLACK);
-        c.setForeground(Color.WHITE);
-        c.setFont(new Font("Arial", Font.BOLD, 15));
-        return c;
-    }
-}
