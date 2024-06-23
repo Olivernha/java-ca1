@@ -161,7 +161,6 @@ public class StudentAdmin {
         while (true) {
             String input = DialogUtil.getInput(message);
             if (input == null) {
-
                 return null;
             }
             if (!input.trim().isEmpty()) {
@@ -180,7 +179,7 @@ public class StudentAdmin {
             if (adminNumber.matches("^p\\d{7}$")) {
                 return adminNumber;
             }
-            DialogUtil.showMessage("Invalid admin number. Admin number should start with 'p'.");
+            DialogUtil.showMessage("Invalid admin number. Admin number should start with 'p' and contain 7 digits.");
         }
     }
 
@@ -248,7 +247,6 @@ public class StudentAdmin {
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
 
         model.addRow(new Object[]{"Median GPA", String.format("%.2f", sm.calculateMedianGPA())});
-        model.addRow(new Object[]{"Mode GPA", String.format("%.2f", sm.calculateModeGPA())});
         model.addRow(new Object[]{"Highest GPA", String.format("%.2f", sm.calculateHighestGPA())});
         model.addRow(new Object[]{"Lowest GPA", String.format("%.2f", sm.calculateLowestGPA())});
         model.addRow(new Object[]{"No of students above GPA 3.0", sm.countStudentsAboveGPAThreshold(3.0)});

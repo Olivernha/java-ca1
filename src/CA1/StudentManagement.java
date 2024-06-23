@@ -1,6 +1,7 @@
 package CA1;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class StudentManagement {
     private final ArrayList<Student> students = new ArrayList<>();
@@ -188,23 +189,6 @@ public class StudentManagement {
         }
     }
 
-    public double calculateModeGPA() {
-        Map<Double, Integer> gpaFrequency = new HashMap<>();
-        for (Student student : getStudents()) {
-            double gpa = student.getGPA();
-            gpaFrequency.put(gpa, gpaFrequency.getOrDefault(gpa, 0) + 1);
-        }
-        int maxFrequency = 0;
-        double modeGPA = 0;
-        for (Map.Entry<Double, Integer> entry : gpaFrequency.entrySet()) {
-            if (entry.getValue() > maxFrequency) {
-                maxFrequency = entry.getValue();
-                modeGPA = entry.getKey();
-            }
-        }
-        return modeGPA;
-    }
-
     public double calculateHighestGPA() {
         double highestGPA = 0;
         for (Student student : getStudents()) {
@@ -237,6 +221,39 @@ public class StudentManagement {
             }
         }
         return count;
+    }
+
+    public String validateClassInput() {
+        String student_class;
+        while (true) {
+            student_class = DialogUtil.getInput("Enter the class to search for (format: DIT/FT/2A/01):");
+
+            if (student_class == null) {
+                DialogUtil.showMessage("Invalid input. Input field cannot be empty!");
+                continue;
+            }
+
+            if (!Pattern.matches("^[A-Za-z0-9]{2,4}/[A-Za-z]{2}/\\d[A-Za-z]/\\d{2}$", student_class)) {
+                DialogUtil.showMessage("Invalid class format. Please use the format DIT/FT/2A/01.");
+                continue;
+            }
+            break;
+        }
+        return student_class;
+    }
+
+    public String validateStudentName() {
+        String student_name;
+        while (true) {
+            student_name = DialogUtil.getInput("Enter the name of the student to search for:");
+
+            if (student_name == null || student_name.trim().isEmpty()) {
+                DialogUtil.showMessage("Invalid input. Name cannot be empty.");
+                continue;
+            }
+            break;
+        }
+        return student_name;
     }
 }
 

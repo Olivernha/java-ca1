@@ -5,7 +5,6 @@ import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-
 public class StudentUser {
     private final StudentManagement sm;
 
@@ -14,8 +13,8 @@ public class StudentUser {
     }
 
     public void displayAllStudData() {
-        String[] columnNames = {"Attribute", "Value"};
-        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+        String[] column_names = {"Attribute", "Value"};
+        DefaultTableModel model = new DefaultTableModel(column_names, 0);
 
         int count = 1;
         for (Student student : sm.getStudents()) {
@@ -32,73 +31,68 @@ public class StudentUser {
             model.addRow(new Object[]{"", ""}); // Add an empty row for spacing
         }
 
-         new InterfaceUtil(model,"All Student Data");
+        new InterfaceUtil(model,"All Student Report");
     }
 
     public void searchStudentByClass() {
-        String studentClass = DialogUtil.getInput("Enter the class to search for (format: DIT/FT/2A/01):");
-        double totalGpa = 0.0;
-        if(studentClass == null){
-            DialogUtil.showMessage("Invalid input. Input field cannot be empty!");
-            return;
-        }
+        String student_class = sm.validateClassInput();
+        double total_gpa = 0.0;
 
-        if (!Pattern.matches("^[A-Za-z0-9]{2,4}/[A-Za-z]{2}/\\d[A-Za-z]/\\d{2}$", studentClass)) {
-            DialogUtil.showMessage("Invalid class format. Please use the format DIT/FT/2A/01.");
-            return;
-        }
-
-        ArrayList<Student> studentsInClass = sm.findStudentsByClass(studentClass);
+        ArrayList<Student> studentsInClass = sm.findStudentsByClass(student_class);
         if (studentsInClass.isEmpty()) {
             DialogUtil.showMessage("No students found from class");
             return;
         }
 
         for(Student student : studentsInClass){
-            totalGpa += student.getGPA();
+            total_gpa += student.getGPA();
         }
 
-        double avgGpa = totalGpa/studentsInClass.size();
+        double avg_gpa = total_gpa/studentsInClass.size();
 
-        String message = STR."Number of Student(s) in \{studentClass}:\{studentsInClass.size()}\nAverage GPA : \{String.format("%.2f", avgGpa)}";
+        String message = STR."Number of Student(s) in \{student_class}:\{studentsInClass.size()}\nAverage GPA : \{String.format("%.2f", avg_gpa)}";
 
         DialogUtil.showMessage(message);
     }
 
     public void searchStudentByName() {
-        String name = DialogUtil.getInput("Enter the name of the student to search for:");
-        if (name == null || name.trim().isEmpty()) {
-            DialogUtil.showMessage("Invalid input. Name cannot be empty.");
-            return;
-        }
-        ArrayList<Student> studentsByName = sm.findStudentsByName(name);
+        String stud_name = sm.validateStudentName();
+
+        ArrayList<Student> studentsByName = sm.findStudentsByName(stud_name);
         if (studentsByName.isEmpty()) {
-            DialogUtil.showErrorMessage(STR."Cannot find the student\"\{name}\"!!");
+            DialogUtil.showErrorMessage(STR."Cannot find the student\"\{stud_name}\"!!");
             return;
         }
 
-        String[] columnNames = {"Attribute", "Value"};
-        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+        String[] column_names = {"Attribute", "Value"};
+        DefaultTableModel model = new DefaultTableModel(column_names, 0);
 
         if (sm.isNotUnique(studentsByName)) {
-            int dialogResult = DialogUtil.showConfirm(STR."\{studentsByName.size()} students found with this name \"\{name}\". Want to filter by admin number?", "Filter by Admin Number? (Y/N)");
-            if (dialogResult == JOptionPane.NO_OPTION) {
+            int dialog_result = DialogUtil.showConfirm(STR."\{studentsByName.size()} students found with this name \"\{stud_name}\". Want to filter by admin number?", "Filter by Admin Number? (Y/N)");
+            if (dialog_result == JOptionPane.NO_OPTION) {
                 for (Student student : studentsByName) {
                     formatStudentDetails(student,model);
                 }
 
             } else {
-                String admNo = DialogUtil.getInput("Enter the admin number to filter:");
-                if (admNo == null || admNo.trim().isEmpty()) {
+                String adm_no = DialogUtil.getInput("Enter the admin number to filter:");
+                if (adm_no == null || adm_no.trim().isEmpty()) {
                     DialogUtil.showMessage("Invalid input. Admin number cannot be empty.");
                     return;
                 }
 
-                Student student = sm.findStudentByAdminNumber(admNo);
-                if (student != null) {
-                    formatStudentDetails(student,model);
-                } else {
-                    DialogUtil.showMessage(STR."No student found with admin number \{admNo}");
+                if(adm_no.matches("^p\\d{7}$")){
+                    Student student = sm.findStudentByAdminNumber(adm_no);
+                    if (student != null) {
+                        formatStudentDetails(student,model);
+                    } else {
+                        DialogUtil.showMessage(STR."No student found with admin number \{adm_no}");
+                        return;
+                    }
+                }
+                else{
+                    DialogUtil.showMessage("Invalid admin number. Admin number should start with 'p'. (e.g. pxxxxxxx)");
+                    return;
                 }
             }
         }
@@ -107,8 +101,7 @@ public class StudentUser {
                 formatStudentDetails(student,model);
             }
         }
-
-        new InterfaceUtil(model,"Student Details");
+        new InterfaceUtil(model, "Student Info");
     }
 
     private void formatStudentDetails(Student student, DefaultTableModel model) {
@@ -143,3 +136,4 @@ public class StudentUser {
         }
     }
 }
+
