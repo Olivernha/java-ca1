@@ -29,12 +29,6 @@ public class StudentManagement {
         }
         return false;
     }
-    public boolean isNotUnqiue(ArrayList<Student> student_names){
-        if(student_names.size() > 1){
-            return true;
-        }
-        return false;
-    }
     public Student findStudentByAdminNumber(String adminNumber) {
         for (Student student : students) {
             if (student.getAdminNumber().equals(adminNumber)) {
@@ -76,15 +70,26 @@ public class StudentManagement {
 
 
     public boolean isNotUnique(ArrayList<Student> student_names){
-        if(student_names.size() > 1){
-            return true;
+        return student_names.size() > 1;
+    }
+
+    public ArrayList<Student> findStuByDiplomaCode(String diploma_code){
+        ArrayList<Student> student_info_by_diploma_code = new ArrayList<>();
+
+        for(Student student : students){
+            String split_diploma_code = student.getStudentClass().split("/",2)[0];
+            if(split_diploma_code.equals(diploma_code)){
+                student_info_by_diploma_code.add(student);
+            }
         }
-        return false;
+        return  student_info_by_diploma_code;
     }
 
     public Module findMostDifficultModule() {
+        String diploma_code = DialogUtil.getInput("Choose Diploma to find most difficult module in. (e.g. DIT/DISM)");
+        ArrayList<Student> filtered_stud_info_array = findStuByDiplomaCode(diploma_code);
         Map<String, int[]> moduleStats = new HashMap<>(); // [totalMarks, count]
-        for (Student student : students) {
+        for (Student student : filtered_stud_info_array) {
             for (Module module : student.getModules()) {
                 moduleStats.computeIfAbsent(module.getModuleCodes(), k -> new int[2]);
                 moduleStats.get(module.getModuleCodes())[0] += module.getMarks();
@@ -102,13 +107,14 @@ public class StudentManagement {
                 mostDifficultModuleCode = entry.getKey();
             }
         }
-
         return getModuleByCode(mostDifficultModuleCode);
     }
 
     public Module findEasiestModule() {
+        String diploma_code = DialogUtil.getInput("Enter diploma to find easiest module in (e.g. DIT/DISM)");
+        ArrayList<Student> filtered_stud_info_array = findStuByDiplomaCode(diploma_code);
         Map<String, int[]> moduleStats = new HashMap<>(); // [totalMarks, count]
-        for (Student student : students) {
+        for (Student student : filtered_stud_info_array) {
             for (Module module : student.getModules()) {
                 moduleStats.computeIfAbsent(module.getModuleCodes(), k -> new int[2]);
                 moduleStats.get(module.getModuleCodes())[0] += module.getMarks();
@@ -126,7 +132,6 @@ public class StudentManagement {
                 easiestModuleCode = entry.getKey();
             }
         }
-
         return getModuleByCode(easiestModuleCode);
     }
 
