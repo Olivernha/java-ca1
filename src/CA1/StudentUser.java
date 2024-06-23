@@ -52,6 +52,7 @@ public class StudentUser {
 
     public void searchStudentByClass() {
         String studentClass = DialogUtil.getInput("Enter the class to search for (format: DIT/FT/2A/01):");
+
         double totalGpa = 0.0;
         if(studentClass == null){
             DialogUtil.showMessage("Invalid input. Input field cannot be empty!");
@@ -97,6 +98,7 @@ public class StudentUser {
             DialogUtil.showErrorMessage("Cannot find the student" + "\"" + name + "\"!!");
             return;
         }
+
 //        StringBuilder message = new StringBuilder();
         String[] columnNames = {"Attribute", "Value"};
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
@@ -178,6 +180,30 @@ class HeaderInterfaceUtil extends DefaultTableCellRenderer {
         c.setBackground(Color.BLACK);
         c.setForeground(Color.WHITE);
         c.setFont(new Font("Arial", Font.BOLD, 15));
-        return c;
+
+
+                Student student = sm.findStudentByAdminNumber(admNo);
+                if (student != null) {
+                    DialogUtil.showMessage(formatStudentDetails(student));
+                } else {
+                    DialogUtil.showMessage("No student found with admin number " + admNo);
+                }
+            }
+        }
+        else {
+            for (Student student : studentsByName) {
+                message.append(formatStudentDetails(student)).append("\n-------------------------\n");
+            }
+            DialogUtil.showMessage(message.toString());
+        }
     }
+
+    private String formatStudentDetails(Student student) {
+        return "Name: " + student.getName() + "\n" +
+                "Admin: " + student.getAdminNumber() + "\n" +
+                "Class: " + student.getStudentClass() + "\n" +
+                "Modules Taken:\n" + student.displayModules() + "\n" +
+                "GPA: " + String.format("%.2f", student.getGPA()) + "\n";
+    }
+
 }

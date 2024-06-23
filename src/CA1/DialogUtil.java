@@ -23,7 +23,8 @@ class DialogUtil {
     }
 
     static int showConfirm(String message, String title) {
-        return JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION);
+       return JOptionPane.showConfirmDialog(null, message, title, JOptionPane.YES_NO_OPTION);
+
     }
 }
 

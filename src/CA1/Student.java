@@ -72,11 +72,11 @@ public class Student {
         return display_module.toString();
     }
 
-    public String getModulesAsString() {
-        StringBuilder modulesStr = new StringBuilder();
-        for (Module module : modules) {
-            modulesStr.append(module.toString()).append("\n");
-        }
-        return modulesStr.toString();
-    }
+//    public String getModulesAsString() {
+//        StringBuilder modulesStr = new StringBuilder();
+//        for (Module module : modules) {
+//            modulesStr.append(module.toString()).append("\n");
+//        }
+//        return modulesStr.toString();
+//    }
 }
