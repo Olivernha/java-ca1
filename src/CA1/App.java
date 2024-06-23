@@ -72,6 +72,7 @@ public class App {
                     break;
                 case SHOW_STATISTICS:
                    admin.displayStatistics();
+                   break;
                 case GPA_FORECAST:
                     admin.forecastGPA();
                     break;

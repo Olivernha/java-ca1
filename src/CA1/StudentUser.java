@@ -41,6 +41,8 @@ public class StudentUser {
 
     public void searchStudentByClass() {
         String student_class = sm.validateClassInput();
+        if(student_class == null) return;
+
         double total_gpa = 0.0;
 
         ArrayList<Student> studentsInClass = sm.findStudentsByClass(student_class);
@@ -62,6 +64,7 @@ public class StudentUser {
 
     public void searchStudentByName() {
         String stud_name = sm.validateStudentName();
+        if(stud_name == null) return;
 
         ArrayList<Student> studentsByName = sm.findStudentsByName(stud_name);
         if (studentsByName.isEmpty()) {

@@ -71,7 +71,7 @@ public class StudentAdmin {
             addMore = dialogResult == JOptionPane.YES_OPTION;
         }
     }
-    public void forecastGPA() {
+    public void forecastGPA(){
         String adminNumber = getValidStringInput("Enter the admin number of the student:");
         if (adminNumber == null) return;
         Student student = sm.findStudentByAdminNumber(adminNumber);
@@ -80,22 +80,22 @@ public class StudentAdmin {
             DialogUtil.showMessage("Student not found.");
             return;
         }
-
         double targetGPA = getValidDoubleInput("Enter the target GPA:", 0, 4);
-        if (targetGPA == -1) return;
+        if(targetGPA == -1) return;
         int additionalModules = getValidIntegerInput("Enter the number of additional modules :", 0, 20);
-        if (additionalModules == -1) return;
-        int creditUnitsPerModule = getValidIntegerInput("Enter the credit units per module :", 0, 20);
-        if (creditUnitsPerModule == -1) return;
+        if(additionalModules == -1) return;
+        // ask for credit uni  and marks fo modules that student will take if he want to add 2 module
 
-        int[] futureGrades = new int[additionalModules];
+        int[] creditUnits = new int[additionalModules];
+        int[] marks = new int[additionalModules];
+
         for (int i = 0; i < additionalModules; i++) {
-            int grade = getValidIntegerInput("Enter grade for module " + (i + 1) + ":", 0, 100);
-            if (grade == -1) return;
-            futureGrades[i] = grade;
+            creditUnits[i] = getValidIntegerInput("Enter the credit units for module " + (i + 1) + ":", 0, 20);
+            if (creditUnits[i] == -1) return;
+            marks[i] = getValidIntegerInput("Enter marks for module " + (i + 1) + ":", 0, 100);
+            if (marks[i] == -1) return;
         }
-
-        boolean canAchieve = sm.canAchieveTargetGPA(student, targetGPA, additionalModules, creditUnitsPerModule, futureGrades);
+        boolean canAchieve = sm.canAchieveTargetGPA(student, targetGPA, additionalModules, creditUnits, marks);
         String message = "With the given future grades, " + (canAchieve ? "you can" : "you cannot") + " achieve the target GPA of " + targetGPA;
         DialogUtil.showMessage(message);
     }

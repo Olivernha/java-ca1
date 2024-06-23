@@ -160,7 +160,7 @@ public class StudentManagement {
         return null;
     }
 
-    public boolean canAchieveTargetGPA(Student student, double targetGPA, int additionalModules, int creditUnitsPerModule, int[] futureGrades) {
+    public boolean canAchieveTargetGPA(Student student, double targetGPA, int additionalModules, int[] creditUnitsPerModule, int[] futureGrades) {
         int currentTotalGradePoints = 0;
         int currentTotalCreditUnits = 0;
 
@@ -170,16 +170,15 @@ public class StudentManagement {
         }
 
         int futureTotalGradePoints = 0;
-        for (int grade : futureGrades) {
-            futureTotalGradePoints += grade * creditUnitsPerModule;
+        int futureTotalCreditUnits = 0;
+
+        for (int i = 0; i < futureGrades.length; i++) {
+            futureTotalGradePoints += futureGrades[i] * creditUnitsPerModule[i];
+            futureTotalCreditUnits += creditUnitsPerModule[i];
         }
 
-        int totalGradePoints = currentTotalGradePoints + futureTotalGradePoints;
-        int totalCreditUnits = currentTotalCreditUnits + (additionalModules * creditUnitsPerModule);
-
-        double projectedGPA = (double) totalGradePoints / totalCreditUnits;
-
-        return projectedGPA >= targetGPA;
+        double futureGPA = (double) futureTotalGradePoints / futureTotalCreditUnits;
+        return futureGPA >= targetGPA && currentTotalCreditUnits + additionalModules <= futureTotalCreditUnits;
     }
     public double calculateMedianGPA() {
         List<Double> gpas = new ArrayList<>();
@@ -235,6 +234,11 @@ public class StudentManagement {
             student_class = DialogUtil.getInput("Enter the class to search for (format: DIT/FT/2A/01):");
 
             if (student_class == null) {
+                // User clicked the cancel button, return null to go back to the previous page
+                return null;
+            }
+
+            if (student_class.trim().isEmpty()) {
                 DialogUtil.showMessage("Invalid input. Input field cannot be empty!");
                 continue;
             }
@@ -253,7 +257,11 @@ public class StudentManagement {
         while (true) {
             student_name = DialogUtil.getInput("Enter the name of the student to search for:");
 
-            if (student_name == null || student_name.trim().isEmpty()) {
+            if(student_name == null){
+                return null;
+            }
+
+            if(student_name.trim().isEmpty()){
                 DialogUtil.showMessage("Invalid input. Name cannot be empty.");
                 continue;
             }
