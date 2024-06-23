@@ -9,7 +9,6 @@ package CA1;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 
 public class StudentUser {
     private final StudentManagement sm;
