@@ -1,3 +1,9 @@
+/*
+ * Name : LIN HTET & NAY HTET AUNG
+ * ADMIN NO : p2340304 & p2340391
+ * CLASS : DIT/FT/2A/03
+ * */
+
 package CA1;
 
 public class Module {
@@ -42,14 +48,5 @@ public class Module {
 
     public int getCreditUnits() {
         return creditUnit;
-    }
-
-
-    @Override
-    public String toString() {
-        return "Module Code: " + modCode + ", " +
-                "Module Name: " + modName + ", " +
-                "Credit Unit: " + creditUnit + ", " +
-                "Marks: " + mark;
     }
 }

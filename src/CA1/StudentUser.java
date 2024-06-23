@@ -1,3 +1,9 @@
+/*
+ * Name : LIN HTET
+ * ADMIN NO : p2340304
+ * CLASS : DIT/FT/2A/03
+ * */
+
 package CA1;
 
 import javax.swing.*;
@@ -28,7 +34,7 @@ public class StudentUser {
                 model.addRow(new Object[]{STR."Module \{module_no++}", STR."\{module.getModuleCodes()}/\{module.getModuleNames()}/\{module.getCreditUnits()}: \{module.getGrade()}"});
             }
 
-            model.addRow(new Object[]{"", ""}); // Add an empty row for spacing
+            model.addRow(new Object[]{"", ""});
         }
 
         new InterfaceUtil(model,"All Student Report");
@@ -115,7 +121,7 @@ public class StudentUser {
         }
         model.addRow(new Object[]{"GPA",String.format("%.2f",student.getGPA())});
 
-        model.addRow(new Object[]{"", ""}); // Add an empty row for spacing
+        model.addRow(new Object[]{"", ""});
     }
 
     public void displayMostDifficultModule() {

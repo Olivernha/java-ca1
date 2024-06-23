@@ -1,3 +1,9 @@
+/*
+ * Name : LIN HTET & NAY HTET AUNG
+ * ADMIN NO : p2340304 & p2340391
+ * CLASS : DIT/FT/2A/03
+ * */
+
 package CA1;
 
 import javax.swing.*;
@@ -5,7 +11,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
-
+// Utility class for building tabulated table.
 public class InterfaceUtil {
 
     public InterfaceUtil(DefaultTableModel model,String title){
